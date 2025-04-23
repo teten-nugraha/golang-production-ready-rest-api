@@ -1,0 +1,12 @@
+info:
+  contact: {}
+  description: This is a sample REST API with Go.
+  title: Golang REST API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
