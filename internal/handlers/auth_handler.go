@@ -22,9 +22,9 @@ func NewAuthHandler(authService services.AuthService) *AuthHandler {
 // @Accept json
 // @Produce json
 // @Param input body models.RegisterRequest true "Register input"
-// @Success 200 {object} models.SuccessResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 500 {object} models.ErrorResponse
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 500 {object} utils.ErrorResponse
 // @Router /auth/register [post]
 func (c *AuthHandler) Register(ctx *gin.Context) {
 	var input models.RegisterRequest
@@ -43,16 +43,16 @@ func (c *AuthHandler) Register(ctx *gin.Context) {
 }
 
 // Login godoc
-// @Summary Login a user
-// @Description Login with email and password
+// @Summary User login
+// @Description Authenticate user and get JWT token
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param input body models.LoginRequest true "Login input"
-// @Success 200 {object} models.SuccessResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Router /auth/login [post]
+// @Param input body models.LoginRequest true "Login credentials"
+// @Success 200 {object} utils.SuccessResponse{data=string} "Returns JWT token"
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 401 {object} utils.ErrorResponse
+// @Router /api/v1/auth/login [post]
 func (c *AuthHandler) Login(ctx *gin.Context) {
 	var input models.LoginRequest
 	if err := ctx.ShouldBindJSON(&input); err != nil {

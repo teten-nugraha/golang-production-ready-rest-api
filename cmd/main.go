@@ -1,10 +1,7 @@
 package main
 
 import (
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/teten-nugraha/golang-production-ready-rest-api/internal/config"
 	"github.com/teten-nugraha/golang-production-ready-rest-api/internal/handlers"
 	"github.com/teten-nugraha/golang-production-ready-rest-api/internal/middlewares"
@@ -47,14 +44,16 @@ func main() {
 	userService := services.NewUserService(userRepo)
 
 	// Initialize controllers
-	authController := handlers.NewAuthHandler(authService)
-	userController := handlers.NewUserHandler(userService)
+	authHandler := handlers.NewAuthHandler(authService)
+	userHandler := handlers.NewUserHandler(userService)
 
 	// Create Gin router
 	r := gin.Default()
 
+	// Setup Swagger
+	config.SetupSwagger(r)
+
 	// Middleware
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.Use(middlewares.CORSMiddleware(cfg.CORSAllowOrigin))
 	r.Use(middlewares.LoggerMiddleware())
 	r.Use(middlewares.RateLimitMiddleware(utils.RedisClient, cfg.RateLimit))
@@ -63,26 +62,23 @@ func main() {
 	v1 := r.Group("/api/v1")
 
 	// Auth routes
-	v1.POST("/auth/register", authController.Register)
-	v1.POST("/auth/login", authController.Login)
+	v1.POST("/auth/register", authHandler.Register)
+	v1.POST("/auth/login", authHandler.Login)
 
 	// Protected routes
 	protected := v1.Group("")
 	protected.Use(middlewares.AuthMiddleware(cfg.JwtSecret))
 	{
-		protected.GET("/users", userController.GetAllUsers)
-		protected.GET("/users/:id", userController.GetUserByID)
-		protected.PUT("/users/:id", userController.UpdateUser)
-		protected.DELETE("/users/:id", userController.DeleteUser)
+		protected.GET("/users", userHandler.GetAllUsers)
+		protected.GET("/users/:id", userHandler.GetUserByID)
+		protected.PUT("/users/:id", userHandler.UpdateUser)
+		protected.DELETE("/users/:id", userHandler.DeleteUser)
 	}
 
 	// Health Check
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, utils.NewSuccessResponse(nil, "API is healthy"))
 	})
-
-	// Swagger
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Start server
 	r.Run(":" + cfg.AppPort)

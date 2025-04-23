@@ -22,8 +22,8 @@ func NewUserHandler(userService services.UserService) *UserController {
 // @Tags users
 // @Security ApiKeyAuth
 // @Produce json
-// @Success 200 {object} models.SuccessResponse
-// @Failure 500 {object} models.ErrorResponse
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 500 {object} utils.ErrorResponse
 // @Router /users [get]
 func (c *UserController) GetAllUsers(ctx *gin.Context) {
 	users, err := c.userService.GetAllUsers()
@@ -42,9 +42,9 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Produce json
 // @Param id path int true "User ID"
-// @Success 200 {object} models.SuccessResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 404 {object} models.ErrorResponse
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 404 {object} utils.ErrorResponse
 // @Router /users/{id} [get]
 func (c *UserController) GetUserByID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -71,9 +71,9 @@ func (c *UserController) GetUserByID(ctx *gin.Context) {
 // @Produce json
 // @Param id path int true "User ID"
 // @Param input body models.User true "User data"
-// @Success 200 {object} models.SuccessResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 500 {object} models.ErrorResponse
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 500 {object} utils.ErrorResponse
 // @Router /users/{id} [put]
 func (c *UserController) UpdateUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -104,9 +104,9 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Produce json
 // @Param id path int true "User ID"
-// @Success 200 {object} models.SuccessResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 500 {object} models.ErrorResponse
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 500 {object} utils.ErrorResponse
 // @Router /users/{id} [delete]
 func (c *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
